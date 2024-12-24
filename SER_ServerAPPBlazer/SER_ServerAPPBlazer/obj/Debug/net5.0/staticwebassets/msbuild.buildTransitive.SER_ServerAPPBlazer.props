@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\SER_ServerAPPBlazer.props" />
+</Project>

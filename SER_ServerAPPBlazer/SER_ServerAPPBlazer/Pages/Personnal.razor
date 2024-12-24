@@ -1,0 +1,41 @@
+﻿@using System.Text.Json
+@page "/Personnal"
+<h3>Personnal</h3>
+
+@foreach (var persona in personas)
+{
+    <p>
+        <b>*@persona.FirstName</b>
+        <b>*@persona.LastName</b>
+        <b>*@persona.IdentityNumber</b>
+    </p>
+}
+
+@code {
+
+    public class PersonnalClass
+    {
+        public int id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string IdentityNumber { get; set; }
+        public string ProffesionalCategory { get; set; }
+    }
+
+    string _ApiUrl = "http://localhost:5031/";
+    private IEnumerable<PersonnalClass> personas = Array.Empty<PersonnalClass>();
+    private async Task refreshList()
+    {
+        HttpClient httpClient = new HttpClient();
+        HttpResponseMessage responce = await httpClient.GetAsync(_ApiUrl + "api/Base/GetPersonnal");
+        httpClient.Dispose();
+        using var respoceStream = await responce.Content.ReadAsStreamAsync();
+        personas = await JsonSerializer.DeserializeAsync<IEnumerable<PersonnalClass>>(respoceStream);
+    } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        await this.refreshList();
+    }
+
+}
